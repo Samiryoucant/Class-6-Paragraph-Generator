@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class 6 Paragraph Generator - All Paragraphs in One Place</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .hover-scale {
+            transition: transform 0.3s ease;
+        }
+        
+        .hover-scale:hover {
+            transform: translateY(-5px);
+        }
+        
+        .typing-animation {
+            overflow: hidden;
+            border-right: 3px solid #667eea;
+            white-space: pre-wrap;
+            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+        
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #667eea }
+        }
+        
+        .category-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        
+        .search-bar {
+            transition: all 0.3s ease;
+        }
+        
+        .search-bar:focus {
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .paragraph-container {
+            max-height: 600px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #667eea #f1f1f1;
+        }
+        
+        .paragraph-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .paragraph-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .paragraph-container::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+        
+        .copy-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .copy-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .copy-btn.copied {
+            background: #10b981;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header Section -->
+    <header class="gradient-bg text-white py-12 px-4">
+        <div class="max-w-6xl mx-auto text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">
+                <i class="fas fa-book-open mr-3"></i>
+                Class 6 Paragraph Generator
+            </h1>
+            <p class="text-lg md:text-xl opacity-90">All your Class 6 paragraphs in one beautiful place</p>
+        </div>
+    </header>
+
+    <!-- Search and Filter Section -->
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        <div class="glass-effect rounded-2xl p-6 mb-8">
+            <div class="flex flex-col md:flex-row gap-4 items-center">
+                <div class="relative flex-1 w-full">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" 
+                           id="searchInput" 
+                           placeholder="Search paragraphs..." 
+                           class="search-bar w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-indigo-500">
+                </div>
+                <select id="categoryFilter" 
+                        class="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-indigo-500">
+                    <option value="all">All Categories</option>
+                    <option value="nature">Nature</option>
+                    <option value="family">Family</option>
+                    <option value="school">School</option>
+                    <option value="festival">Festival</option>
+                    <option value="animal">Animal</option>
+                    <option value="season">Season</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Category Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="category-card rounded-xl p-6 text-white cursor-pointer" onclick="filterCategory('nature')">
+                <i class="fas fa-leaf text-3xl mb-3"></i>
+                <h3 class="text-xl font-semibold mb-2">Nature</h3>
+                <p class="text-sm opacity-90">Beautiful paragraphs about nature</p>
+            </div>
+            <div class="category-card rounded-xl p-6 text-white cursor-pointer" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);" onclick="filterCategory('family')">
+                <i class="fas fa-home text-3xl mb-3"></i>
+                <h3 class="text-xl font-semibold mb-2">Family</h3>
+                <p class="text-sm opacity-90">Heartwarming family moments</p>
+            </div>
+            <div class="category-card rounded-xl p-6 text-white cursor-pointer" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);" onclick="filterCategory('school')">
+                <i class="fas fa-graduation-cap text-3xl mb-3"></i>
+                <h3 class="text-xl font-semibold mb-2">School Life</h3>
+                <p class="text-sm opacity-90">Memorable school experiences</p>
+            </div>
+        </div>
+
+        <!-- Paragraphs Display -->
+        <div id="paragraphsContainer" class="space-y-6">
+            <!-- Paragraphs will be dynamically loaded here -->
+        </div>
+    </div>
+
+    <!-- Modal for Full Paragraph -->
+    <div id="paragraphModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-2xl font-bold text-gray-800" id="modalTitle">Paragraph</h3>
+                        <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times text-2xl"></i>
+                        </button>
+                    </div>
+                    <div id="modalContent" class="paragraph-container p-4 bg-gray-50 rounded-lg">
+                        <!-- Content will be loaded here -->
+                    </div>
+                    <div class="mt-4 flex justify-end">
+                        <button onclick="copyToClipboard(modalContent.innerText)" 
+                                class="copy-btn bg-indigo-500 text-white px-6 py-2 rounded-lg hover:bg-indigo-600">
+                            <i class="fas fa-copy mr-2"></i>Copy
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Paragraphs data
+        const paragraphs = [
+            {
+                id: 1,
+                title: "My Family",
+                category: "family",
+                content: "My family is a small and happy family. There are four members in my family - my father, my mother, my younger sister and me. My father is a teacher and my mother is a housewife. My sister is in class 3. We all love each other very much. Every evening we sit together and talk about our day. My mother cooks delicious food for us. My father helps me with my homework. I love my family very much."
+            },
+            {
+                id: 2,
+                title: "My Best Friend",
+                category: "school",
+                content: "My best friend's name is Rahul. He is in my class and sits next to me. He is very friendly and helpful. Whenever I need help with my studies, he always helps me. He has many good qualities. He is good at sports too. We play together during recess. He shares his tiffin with me. I am very lucky to have a friend like Rahul."
+            },
+            {
+                id: 3,
+                title: "My School",
+                category: "school",
+                content: "The name of my school is Delhi Public School. It is a big school with many classrooms. There is a big playground where we play during recess. My school has a library with many books. All the teachers in my school are very kind and helpful. I love going to school every day. I learn many new things from my teachers. My school is like my second home."
+            },
+            {
+                id: 4,
+                title: "The Rainy Season",
+                category: "season",
+                content: "The rainy season is my favorite season. It comes after the hot summer season. Dark clouds cover the sky and it starts raining. The trees look green and beautiful. Children make paper boats and float them in the water. Farmers are happy as their crops get water. I love to jump in the puddles and get wet in the rain. Everything looks fresh and clean after the rain."
+            },
+            {
+                id: 5,
+                title: "My Pet Dog",
+                category: "animal",
+                content: "I have a pet dog named Tommy. He is small and brown in color. Tommy is very playful and friendly. Every morning he goes for a walk with my father. He wags his tail when he sees me. Tommy eats bread and drinks milk. He guards our house at night. When I come back from school, he runs to me and licks my feet. I love my pet very much."
+            },
+            {
+                id: 6,
+                title: "Diwali Festival",
+                category: "festival",
+                content: "Diwali is my favorite festival. It is called the festival of lights. We clean our house and decorate it with diyas and candles. We make beautiful rangoli at our doorstep. On Diwali night, we worship Goddess Lakshmi. We wear new clothes and eat sweets. Children burst crackers and enjoy the festival. I love Diwali very much as I get gifts from my parents and relatives."
+            },
+            {
+                id: 7,
+                title: "A Visit to the Zoo",
+                category: "animal",
+                content: "Last Sunday, my parents took me to the zoo. I saw many animals like lions, tigers, elephants, and monkeys. The lion was sleeping under a tree. The monkeys were jumping from one tree to another. The elephants were eating bananas. I also saw colorful birds in the bird house. It was a very exciting day for me. I learned many things about animals."
+            },
+            {
+                id: 8,
+                title: "My Favorite Teacher",
+                category: "school",
+                content: "My favorite teacher is Mrs. Sharma. She teaches us English. She is very kind and patient. She explains everything clearly. She never gets angry when we ask questions. She tells us interesting stories in the class. She also helps weak students after school. I want to be a teacher like her when I grow up."
+            },
+            {
+                id: 9,
+                title: "My Garden",
+                category: "nature",
+                content: "We have a small garden in front of our house. My grandmother takes care of it. There are many flowers like roses, marigolds, and sunflowers. The garden looks very colorful when all the flowers bloom. Bees and butterflies come to the flowers. I help my grandmother in watering the plants. The garden looks beautiful in the morning when the flowers open."
+            },
+            {
+                id: 10,
+                title: "A Rainy Day",
+                category: "nature",
+                content: "Yesterday was a rainy day. It was raining heavily since morning. I could not go to school. I stayed at home and watched the rain from my window. The trees were dancing in the wind. The roads were full of water. Children were making paper boats. My mother made hot pakoras and tea for us. I enjoyed the rainy day at home."
+            },
+            {
+                id: 11,
+                title: "My Grandmother",
+                category: "family",
+                content: "My grandmother is the oldest member of our family. She is 70 years old. She tells us interesting stories at bedtime. She makes delicious pickles and sweets. She loves me very much. Every evening we sit together and she tells me stories about her childhood. She teaches me good manners. I love spending time with my grandmother."
+            },
+            {
+                id: 12,
+                title: "My Birthday Party",
+                category: "family",
+                content: "Last month was my birthday. My parents organized a party for me. They invited all my friends. My mother cooked delicious food. My father brought a big chocolate cake. All my friends brought gifts for me. We played games and danced. It was the best birthday party ever. I felt very happy and special that day."
+            }
+        ];
+
+        // Initialize the app
+        let currentParagraphs = [...paragraphs];
+        
+        function renderParagraphs(paragraphsToRender = currentParagraphs) {
+            const container = document.getElementById('paragraphsContainer');
+            container.innerHTML = '';
+            
+            if (paragraphsToRender.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12">
+                        <i class="fas fa-search text-6xl text-gray-300 mb-4"></i>
+                        <p class="text-xl text-gray-500">No paragraphs found. Try a different search!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            paragraphsToRender.forEach(paragraph => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-xl shadow-lg p-6 hover-scale cursor-pointer';
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-xl font-semibold text-gray-800">${paragraph.title}</h3>
+                        <span class="px-3 py-1 bg-indigo-100 text-indigo-600 rounded-full text-sm">${paragraph.category}</span>
+                    </div>
+                    <p class="text-gray-600 mb-4 line-clamp-3">${paragraph.content.substring(0, 150)}...</p>
+                    <div class="flex justify-between items-center">
+                        <button onclick="openModal(${paragraph.id})" 
+                                class="text-indigo-500 hover:text-indigo-700 font-medium">
+                            Read More <i class="fas fa-arrow-right ml-1"></i>
+                        </button>
+                        <button onclick="copyToClipboard('${paragraph.content.replace(/'/g, "\\'")}')" 
+                                class="copy-btn bg-gray-100 hover:bg-gray-200 p-2 rounded-lg">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+        
+        function searchParagraphs() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            
+            let filtered = paragraphs.filter(p => {
+                const matchesSearch = p.title.toLowerCase().includes(searchTerm) || 
+                                      p.content.toLowerCase().includes(searchTerm);
+                const matchesCategory = categoryFilter === 'all' || p.category === categoryFilter;
+                return matchesSearch && matchesCategory;
+            });
+            
+            currentParagraphs = filtered;
+            renderParagraphs();
+        }
+        
+        function filterCategory(category) {
+            document.getElementById('categoryFilter').value = category;
+            searchParagraphs();
+        }
+        
+        function openModal(paragraphId) {
+            const paragraph = paragraphs.find(p => p.id === paragraphId);
+            if (!paragraph) return;
+            
+            document.getElementById('modalTitle').textContent = paragraph.title;
+            document.getElementById('modalContent').innerHTML = `
+                <p class="text-lg leading-relaxed">${paragraph.content}</p>
+            `;
+            document.getElementById('paragraphModal').classList.remove('hidden');
+        }
+        
+        function closeModal() {
+            document.getElementById('paragraphModal').classList.add('hidden');
+        }
+        
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = event.target;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i>';
+                btn.classList.add('copied');
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+        
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', searchParagraphs);
+        document.getElementById('categoryFilter').addEventListener('change', searchParagraphs);
+        
+        // Close modal on outside click
+        document.getElementById('paragraphModal').addEventListener('click', (e) => {
+            if (e.target.id === 'paragraphModal') {
+                closeModal();
+            }
+        });
+        
+        // Initial render
+        renderParagraphs();
+    </script>
+</body>
+</html>
